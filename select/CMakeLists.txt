@@ -1,0 +1,1 @@
+add_executable(Select select.c)
