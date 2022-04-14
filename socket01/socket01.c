@@ -7,6 +7,8 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 
+#define MAX_LEN 4096
+
 /**
  * listen and bind socket01
  *
@@ -76,23 +78,28 @@ int main() {
     }
 
     // 处理客户数连接，收发数据
-    int max_len = 4096;
-    char buff[max_len];
+    int max_len = MAX_LEN;
+    char buff[MAX_LEN];
     size_t numRead;
 
-    while ((numRead = read(conn, buff, max_len)) > 0){
+    while ((numRead = read(conn, buff, max_len)) > 0) {
         // 把获取的数据写回去
-        if (write(conn, buff, numRead) != numRead){
+        if (write(conn, buff, numRead) != numRead) {
             perror("send data error");
             return -1;
         }
     }
 
-    if(numRead == -1){
+    if (numRead == 0) {
+        printf("the client conn is closed");
+    }
+
+    if (numRead == -1) {
         perror("conn error");
         exit(EXIT_FAILURE);
     }
 
-    // 临时测试阻塞进程，避免程序退出
-    for (;;){}
+    // 进程退出会自动关闭，并非必要调用close函数
+    close(conn);
+    close(sockFD);
 }
