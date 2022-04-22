@@ -5,6 +5,7 @@
 #include <netinet/in.h>
 #include <unistd.h>
 #include "socket.h"
+#include <pthread.h>
 
 fd_set workingSet, masterSet;
 
